@@ -2,7 +2,12 @@
 *.db 
 *.sqlite 
 *sqlite3 
-#pycache
+<<<<<<< HEAD
+
+=======
+
+>>>>>>> 432cd187cdc2fd0bc92d125a05bf048badef141e
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyc 
