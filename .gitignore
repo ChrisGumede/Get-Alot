@@ -2,3 +2,7 @@
 *.db 
 *.sqlite 
 *sqlite3 
+#pycache
+__pycache__/
+*.py[cod]
+*.pyo
