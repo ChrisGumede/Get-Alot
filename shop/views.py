@@ -13,7 +13,7 @@ def index(request):
         product_objects = product_objects.filter(title__icontains = product_name)
 
     #creating pagination intances
-    paginator = Paginator(product_objects,6)
+    paginator = Paginator(product_objects,5)
     page_number = request.GET.get('page')
     product_objects = paginator.get_page(page_number)
     return render(request,'shop/index.html',{'product_objects':product_objects})
