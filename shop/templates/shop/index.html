@@ -9,19 +9,25 @@
         <meta charset="utf-8" />
         <meta
             name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
 <!-- Bootstrap CSS v5.2.1 -->
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous"
-        />
+            crossorigin="anonymous"/>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+        <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     </head>
     <body>
         <div class="container">
@@ -42,7 +48,7 @@
                                         <a class="nav-link" href="#">Features</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a id ="cart" class="nav-link" href="#">Cart(0)</a>
+                                        <button id="cart" data-html="true" type="button" class="btn btn-secondary" data-container="body" data-tonggle="popover" data-bs-placement="bottom" data-bs-content="button popover">Cart(0)</button>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
@@ -76,7 +82,7 @@
                     <div class="card">
                         <img class="card-img-top" src="{{ product.image }}"/>
                         <div class="card-body">
-                            <p class="card-title">{{ product.title }}</p>
+                            <p id="nm{{ product.id }}" class="card-title">{{ product.title }}</p>
                             <h4 class="card-text">R {{ product.price }}</h4>
                             <a href="/{{ product.id }}"class="btn btn-warning">View</a>
                             <button id="{{ product.id }}" class="btn atc btn-warning">Add to cart</button>
@@ -135,6 +141,24 @@
             localStorage.setItem('cart',JSON.stringify(cart));
             document.getElementById("cart").innerHTML = "cart("+ Object.keys(cart).length +")";
         });
+
+//Javascript popover function
+        DisplayCart(cart);
+        function DisplayCart(cart){
+            var cartString = "";
+            cartString += "<h6>This is your cart</h6>";
+            var cartIndex = 1;
+//Loop in cart
+            for(var x in cart){
+                cartString += cartIndex;
+                cartString += document.getElementById("nm"+x).innerHTML + "Qty:" + cart[x] + "</br>";
+                cartIndex += 1;
+            }
+
+            cartString += "<a href='/checkout'><button class='btn btn-success' id='checkout'>checkout</button></a>";
+            document.getElementById("cart").setAttribute('data-content',cartString);
+            $('[data-toggle="popover"]').popover();
+        }
 
     </script>      
 </html>

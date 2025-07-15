@@ -22,5 +22,7 @@ def detail(request,id):
     Product_object = Product.objects.get(id=id)
     return render(request,'shop/detail.html',{'product_object':Product_object})
 
+def ckeckout(request):
+    return render(request,'shop/ckeckout.html')
 
 
