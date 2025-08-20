@@ -23,6 +23,7 @@ def detail(request,id):
     return render(request,'shop/detail.html',{'product_object':Product_object})
 
 def ckeckout(request):
-    return render(request,'shop/ckeckout.html')
+    return render(request,'shop/checkout.html')
 
-
+def base(request):
+    return render(request,'base.html')

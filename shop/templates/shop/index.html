@@ -1,64 +1,8 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
-    
-    <head>
-        <link rel="stylesheet" href="{% static 'shop/style.css' %}">
-        <title>Get Alot </title>
-<!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
-<!-- Bootstrap CSS v5.2.1 -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous"/>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-
-        <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    </head>
+{% extends 'shop/base.html' %}
+{% block content %}
     <body>
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                        <div class="container-fluid">
-                            <a class="navbar-brand" style="font-style: italic;">Get Alot!</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarNav">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Features</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button id="cart" data-html="true" type="button" class="btn btn-secondary" data-container="body" data-tonggle="popover" data-bs-placement="bottom" data-bs-content="button popover">Cart(0)</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </div>
 <!--Start search functionality -->               
             <div card="row">
                 <div class="col-md-10 offset-0.3">
@@ -116,6 +60,8 @@
             </div>
          </div>
 
+        
+
     </body>
 <!--Javascript for add to cart, well as haddling button clicked-->
     <script type="text/javascript">
@@ -132,15 +78,25 @@
             var item_id = this.id.toString();
             console.log(item_id);
             if (cart[item_id]!=undefined){
-                cart[item_id] = cart[item_id] + 1;  
+                quantity = cart[item_id][0] + 1;
+                cart[item_id][0] = quantity   
             }
             else{
-                cart[item_id] = 1;
+                quantity = 1;
+                name = document.getElementById("nm"+item_id).innerHTML;
+                cart[item_id]=[quantity,name];
             }
             console.log(cart);
             localStorage.setItem('cart',JSON.stringify(cart));
             document.getElementById("cart").innerHTML = "cart("+ Object.keys(cart).length +")";
         });
+        
+//popover cart
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+});
 
 //Javascript popover function
         DisplayCart(cart);
@@ -151,16 +107,18 @@
 //Loop in cart
             for(var x in cart){
                 cartString += cartIndex;
-                cartString += document.getElementById("nm"+x).innerHTML + "Qty:" + cart[x] + "</br>";
+                cartString += document.getElementById("nm"+x).innerHTML + "Qty:" + cart[x][0] + "</br>";
                 cartIndex += 1;
             }
 
-            cartString += "<a href='/checkout'><button class='btn btn-success' id='checkout'>checkout</button></a>";
-            document.getElementById("cart").setAttribute('data-content',cartString);
-            $('[data-toggle="popover"]').popover();
+            cartString += `<a href='/checkout'class="btn btn-success" id='checkout'>checkout </a>`;
+            document.getElementById("cart").setAttribute('data-bs-content',cartString);
+            $('[data-bs-toggle="popover"]').popover();
         }
 
-    </script>      
-</html>
+    </script> 
+
+    
+{% endblock %}
 
 
