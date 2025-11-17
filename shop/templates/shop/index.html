@@ -1,12 +1,25 @@
 
 {% extends 'shop/base.html' %}
 {% block content %}
-    <body>
+    <body> 
         <div class="container">
 <!--Start search functionality -->               
             <div card="row">
                 <div class="col-md-10 offset-0.3">
-                    <div class="card card-sm">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">To Day's deal</button>
+                        <div class="row">
+                            <div class="col-md-3 offset-md-8">
+                                <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Get-Alot! Hot deals</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body">
+                                    <p>Try scrolling the rest of the page to see this option in action.</p>
+                                </div>
+                                </div>
+                            </div></br>
+                        </div>
                         <form class="card-body row no-gutters align-items-center">
                             <div class="col">
                                 <input type="search" name='product_name' placeholder="Search for products" class="form-control form-control-borderless">
@@ -14,10 +27,13 @@
                             <div class="col-auto">
                                 <button class="btn btn-success" type="submit">Search</button>
                             </div>
+                            
                         </form>
-                    </div>
+                        
+                    
                 </div>
             </div>
+        </br>
 <!--Products for loop-->
             <div class="row">
             {% for product in product_objects %}
@@ -59,8 +75,10 @@
                 </ul>
             </div>
          </div>
+        </div>
 
-        
+    
+      
 
     </body>
 <!--Javascript for add to cart, well as haddling button clicked-->
@@ -117,6 +135,9 @@
         }
 
     </script> 
+    <footer>
+       <p>dsfusduifsduifsdiuisd</p> 
+    </footer>
 
     
 {% endblock %}
