@@ -1,64 +1,277 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-    
-    <head>
-        <link rel="stylesheet" href="{% static 'shop/style.css' %}">
-        <title>Get Alot </title>
-<!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <title>{% block title %}Get Alot!{% endblock %}</title>
 
-    </head>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
 
-<!--Navbar-->
-    <body>
-        <div class="container-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                        <div class="container-fluid">
-                            <a class="navbar-brand" style="font-style: italic;">Get Alot!</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarNav">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Features</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button id="cart" type="button" class="btn btn-primary"
-                                            data-bs-toggle="popover"
-                                            data-bs-html="true"
-                                            data-bs-placement="bottom"
-                                            title="Cart">
-                                            Cart(0)
-                                        </button>
-                                    </li>
-                                    
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </div>
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'shop/style.css' %}" />
+
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold fst-italic" href="/">Get Alot!</a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.path == '/' %}active{% endif %}"
+                aria-current="page"
+                href="/"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav">
+            <li class="nav-item me-3">
+              <button
+                id="wishlist"
+                type="button"
+                class="btn btn-outline-danger position-relative"
+                data-bs-toggle="popover"
+                data-bs-html="true"
+                data-bs-placement="bottom"
+                data-bs-trigger="focus"
+                title="Your Wishlist"
+              >
+                <i class="bi bi-heart"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  id="wishlistCount"
+                  style="display: none"
+                >
+                  0
+                </span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                id="cart"
+                type="button"
+                class="btn btn-primary position-relative"
+                data-bs-toggle="popover"
+                data-bs-html="true"
+                data-bs-placement="bottom"
+                data-bs-trigger="focus"
+                title="Your Cart"
+              >
+                <i class="bi bi-cart3"></i> Cart
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
+                  id="cartCount"
+                  style="display: none"
+                >
+                  0
+                </span>
+              </button>
+            </li>
+          </ul>
         </div>
+      </div>
+    </nav>
 
-    </body> 
-</html>           
-{% block content %} {% endblock %}
-       
+    <!-- Main Content -->
+    <main>{% block content %}{% endblock %}</main>
 
+    <!-- Bootstrap Bundle JS (includes Popper) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!-- Cart and Wishlist functionality -->
+    <script>
+      // Initialize cart and wishlist in memory
+      let cart = {};
+      let wishlist = {};
+
+      // Function to update cart display
+      function updateCartDisplay() {
+        const cartCount = Object.keys(cart).length;
+        const cartBtn = document.getElementById("cart");
+        const cartBadge = document.getElementById("cartCount");
+
+        if (cartBtn) {
+          if (cartCount > 0) {
+            cartBadge.textContent = cartCount;
+            cartBadge.style.display = "inline-block";
+          } else {
+            cartBadge.style.display = "none";
+          }
+          displayCart();
+        }
+      }
+
+      // Function to display cart in popover
+      function displayCart() {
+        let cartString = "<h6 class='mb-2'>Your Cart</h6>";
+
+        if (Object.keys(cart).length === 0) {
+          cartString += "<p class='text-muted mb-0'>Your cart is empty</p>";
+        } else {
+          cartString += "<ul class='list-unstyled mb-2'>";
+          let cartIndex = 1;
+
+          for (let itemId in cart) {
+            const itemElement = document.getElementById("nm" + itemId);
+            const itemName = itemElement
+              ? itemElement.innerHTML
+              : cart[itemId][1];
+            cartString += `<li class='mb-1'><small>${cartIndex}. ${itemName} - Qty: ${cart[itemId][0]}</small></li>`;
+            cartIndex++;
+          }
+
+          cartString += "</ul>";
+          cartString += `<a href='/checkout' class='btn btn-success btn-sm w-100'>Checkout</a>`;
+        }
+
+        const cartBtn = document.getElementById("cart");
+        if (cartBtn) {
+          cartBtn.setAttribute("data-bs-content", cartString);
+
+          const existingPopover = bootstrap.Popover.getInstance(cartBtn);
+          if (existingPopover) {
+            existingPopover.dispose();
+          }
+
+          new bootstrap.Popover(cartBtn, {
+            html: true,
+            sanitize: false,
+          });
+        }
+      }
+
+      // Function to update wishlist display
+      function updateWishlistDisplay() {
+        const wishlistCount = Object.keys(wishlist).length;
+        const wishlistBtn = document.getElementById("wishlist");
+        const wishlistBadge = document.getElementById("wishlistCount");
+
+        if (wishlistBtn) {
+          if (wishlistCount > 0) {
+            wishlistBadge.textContent = wishlistCount;
+            wishlistBadge.style.display = "inline-block";
+          } else {
+            wishlistBadge.style.display = "none";
+          }
+          displayWishlist();
+        }
+      }
+
+      // Function to display wishlist in popover
+      function displayWishlist() {
+        let wishlistString =
+          "<h6 class='mb-2'><i class='bi bi-heart-fill text-danger'></i> Your Wishlist</h6>";
+
+        if (Object.keys(wishlist).length === 0) {
+          wishlistString +=
+            "<p class='text-muted mb-0'>Your wishlist is empty</p>";
+        } else {
+          wishlistString += "<ul class='list-unstyled mb-2'>";
+
+          for (let itemId in wishlist) {
+            const itemName = wishlist[itemId][0];
+            const itemPrice = wishlist[itemId][1];
+            wishlistString += `
+                        <li class='mb-2 d-flex justify-content-between align-items-center'>
+                            <div>
+                                <small class='d-block fw-bold'>${itemName}</small>
+                                <small class='text-success'>R ${itemPrice}</small>
+                            </div>
+                            <button class='btn btn-sm btn-outline-danger remove-wishlist' data-id='${itemId}'>
+                                <i class='bi bi-trash'></i>
+                            </button>
+                        </li>
+                    `;
+          }
+
+          wishlistString += "</ul>";
+        }
+
+        const wishlistBtn = document.getElementById("wishlist");
+        if (wishlistBtn) {
+          wishlistBtn.setAttribute("data-bs-content", wishlistString);
+
+          const existingPopover = bootstrap.Popover.getInstance(wishlistBtn);
+          if (existingPopover) {
+            existingPopover.dispose();
+          }
+
+          new bootstrap.Popover(wishlistBtn, {
+            html: true,
+            sanitize: false,
+          });
+        }
+      }
+
+      // Remove from wishlist
+      $(document).on("click", ".remove-wishlist", function () {
+        const itemId = $(this).data("id");
+        delete wishlist[itemId];
+        updateWishlistDisplay();
+      });
+
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        displayCart();
+        displayWishlist();
+      });
+
+      // Make functions available globally for child templates
+      window.cart = cart;
+      window.wishlist = wishlist;
+      window.updateCartDisplay = updateCartDisplay;
+      window.displayCart = displayCart;
+      window.updateWishlistDisplay = updateWishlistDisplay;
+      window.displayWishlist = displayWishlist;
+    </script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

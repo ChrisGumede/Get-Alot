@@ -1,45 +1,664 @@
-{% extends 'shop/base.html' %}
-{% block content %}
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <img src="{{ product_object.image }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ product_object.title }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ product_object.price }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ product_object.discount_price }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ product_object.description }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
+{% extends 'shop/base.html' %} {% block title %}{{ product_object.title }} - Get
+Alot!{% endblock %} {% block extra_css %}
+<style>
+  .product-image {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
 
+  .product-image:hover {
+    transform: scale(1.02);
+  }
+
+  .price-original {
+    text-decoration: line-through;
+    color: #6c757d;
+    font-size: 1.1rem;
+  }
+
+  .price-discount {
+    color: #dc3545;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .price-regular {
+    color: #198754;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .savings-badge {
+    background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 1rem;
+  }
+
+  .product-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .product-card:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  .btn-add-cart {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-add-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+  }
+
+  .product-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 1rem;
+  }
+
+  .product-description {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #495057;
+  }
+
+  .feature-item {
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .feature-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+  }
+
+  .breadcrumb {
+    background: transparent;
+    padding: 1rem 0;
+  }
+
+  .trust-badge {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .trust-badge:hover {
+    transform: scale(1.1);
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container my-5">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/">Products</a></li>
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ product_object.title }}
+      </li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <!-- Product Image -->
+    <div class="col-lg-6">
+      <div class="sticky-top" style="top: 100px">
+        <img
+          src="{{ product_object.image }}"
+          alt="{{ product_object.title }}"
+          class="img-fluid product-image w-100"
+        />
+
+        <!-- Image Gallery Thumbnails -->
+        <div class="row g-2 mt-3">
+          <div class="col-3">
+            <img
+              src="{{ product_object.image }}"
+              class="img-fluid rounded"
+              style="cursor: pointer; border: 2px solid #ffc107"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details -->
+    <div class="col-lg-6">
+      <div class="product-card p-4">
+        <h1 class="product-title">{{ product_object.title }}</h1>
+
+        <!-- Rating -->
+        <div class="mb-3">
+          <span class="text-warning">★★★★★</span>
+          <span class="text-muted ms-2">(4.5/5 - 127 reviews)</span>
+        </div>
+
+        <!-- Price Section -->
+        <div class="mb-4">
+          {% if product_object.discount_price %}
+          <div class="d-flex align-items-center">
+            <span class="price-discount"
+              >R {{ product_object.discount_price }}</span
+            >
+            <span class="savings-badge">
+              Save R {% widthratio product_object.price|add:"-" 1 1 %}{{
+              product_object.discount_price }}
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="price-original">R {{ product_object.price }}</span>
+          </div>
+          {% else %}
+          <span class="price-regular">R {{ product_object.price }}</span>
+          {% endif %}
+        </div>
+
+        <hr class="my-4" />
+
+        <!-- Product Description -->
+        <div class="mb-4">
+          <h5 class="fw-bold mb-3">Product Description</h5>
+          <p class="product-description">{{ product_object.description }}</p>
+        </div>
+
+        <!-- Key Features with Modals -->
+        <div class="mb-4">
+          <h5 class="fw-bold mb-3">Key Features</h5>
+          <div class="feature-item">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            <strong>Free Shipping</strong> on orders over R500
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-shield-check text-primary me-2"></i>
+            <strong>Warranty:</strong> 1 Year Manufacturer Warranty
+          </div>
+          <div
+            class="feature-item"
+            data-bs-toggle="modal"
+            data-bs-target="#deliveryModal"
+          >
+            <i class="bi bi-truck text-warning me-2"></i>
+            <strong>Delivery:</strong> 3-5 Business Days
+            <i class="bi bi-arrow-right float-end"></i>
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-arrow-return-left text-info me-2"></i>
+            <strong>Returns:</strong> 30-Day Return Policy
+          </div>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="mb-4">
+          <label class="form-label fw-bold">Quantity:</label>
+          <div class="input-group" style="max-width: 150px">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="decreaseQty"
+            >
+              <i class="bi bi-dash"></i>
+            </button>
+            <input
+              type="text"
+              class="form-control text-center"
+              value="1"
+              id="quantity"
+              readonly
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="increaseQty"
+            >
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-grid gap-3">
+          <button
+            id="{{ product_object.id }}"
+            class="btn btn-warning btn-add-cart atc"
+          >
+            <i class="bi bi-cart-plus me-2"></i>Add to Cart
+          </button>
+          <button class="btn btn-success btn-add-cart">
+            <i class="bi bi-lightning-fill me-2"></i>Buy Now
+          </button>
+          <button
+            class="btn btn-outline-danger btn-wishlist"
+            id="wishlistBtn"
+            data-id="{{ product_object.id }}"
+          >
+            <i class="bi bi-heart me-2"></i>Add to Wishlist
+          </button>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="mt-4 pt-4 border-top">
+          <div class="row text-center g-3">
+            <div
+              class="col-4 trust-badge"
+              data-bs-toggle="modal"
+              data-bs-target="#paymentModal"
+            >
+              <i
+                class="bi bi-shield-check text-success"
+                style="font-size: 2rem"
+              ></i>
+              <p class="small mt-2 mb-0">Secure<br />Payment</p>
+            </div>
+            <div
+              class="col-4 trust-badge"
+              data-bs-toggle="modal"
+              data-bs-target="#deliveryModal"
+            >
+              <i class="bi bi-truck text-primary" style="font-size: 2rem"></i>
+              <p class="small mt-2 mb-0">Fast<br />Delivery</p>
+            </div>
+            <div
+              class="col-4 trust-badge"
+              data-bs-toggle="modal"
+              data-bs-target="#supportModal"
+            >
+              <i class="bi bi-headset text-warning" style="font-size: 2rem"></i>
+              <p class="small mt-2 mb-0">24/7<br />Support</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Information Tabs -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <ul class="nav nav-tabs" id="productTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="details-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#details"
+            type="button"
+            role="tab"
+          >
+            Specifications
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="reviews-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#reviews"
+            type="button"
+            role="tab"
+          >
+            Reviews (127)
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="shipping-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#shipping"
+            type="button"
+            role="tab"
+          >
+            Shipping Info
+          </button>
+        </li>
+      </ul>
+      <div
+        class="tab-content p-4 border border-top-0 rounded-bottom"
+        id="productTabContent"
+      >
+        <div class="tab-pane fade show active" id="details" role="tabpanel">
+          <h5>Product Specifications</h5>
+          <p>{{ product_object.description }}</p>
+        </div>
+        <div class="tab-pane fade" id="reviews" role="tabpanel">
+          <h5>Customer Reviews</h5>
+          <p class="text-muted">Reviews coming soon...</p>
+        </div>
+        <div class="tab-pane fade" id="shipping" role="tabpanel">
+          <h5>Shipping Information</h5>
+          <p>
+            Free shipping on orders over R500. Standard delivery takes 3-5
+            business days.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Secure Payment Modal -->
+<div
+  class="modal fade"
+  id="paymentModal"
+  tabindex="-1"
+  aria-labelledby="paymentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="paymentModalLabel">
+          <i class="bi bi-shield-check me-2"></i>Secure Payment
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <h6 class="fw-bold mb-3">We Accept:</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-3 text-center">
+            <i
+              class="bi bi-credit-card"
+              style="font-size: 2.5rem; color: #0066cc"
+            ></i>
+            <p class="small mt-2">Visa</p>
+          </div>
+          <div class="col-3 text-center">
+            <i
+              class="bi bi-credit-card-fill"
+              style="font-size: 2.5rem; color: #eb001b"
+            ></i>
+            <p class="small mt-2">Mastercard</p>
+          </div>
+          <div class="col-3 text-center">
+            <i
+              class="bi bi-paypal"
+              style="font-size: 2.5rem; color: #003087"
+            ></i>
+            <p class="small mt-2">PayPal</p>
+          </div>
+          <div class="col-3 text-center">
+            <i class="bi bi-bank" style="font-size: 2.5rem; color: #28a745"></i>
+            <p class="small mt-2">EFT</p>
+          </div>
+        </div>
+        <div class="alert alert-success">
+          <i class="bi bi-lock-fill me-2"></i>
+          <strong>SSL Encrypted</strong> - Your payment information is
+          completely secure
+        </div>
+        <ul class="list-unstyled">
+          <li>
+            <i class="bi bi-check-circle-fill text-success me-2"></i>256-bit
+            encryption
+          </li>
+          <li>
+            <i class="bi bi-check-circle-fill text-success me-2"></i>PCI DSS
+            compliant
+          </li>
+          <li>
+            <i class="bi bi-check-circle-fill text-success me-2"></i>Fraud
+            protection
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fast Delivery Modal -->
+<div
+  class="modal fade"
+  id="deliveryModal"
+  tabindex="-1"
+  aria-labelledby="deliveryModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="deliveryModalLabel">
+          <i class="bi bi-truck me-2"></i>Delivery Information
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <h6 class="fw-bold mb-3">Delivery Coverage Map</h6>
+        <div class="mb-4">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d228726.5806847451!2d27.849608299999998!3d-26.195246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e950c68f0406a51%3A0x238ac9d9b1d34041!2sJohannesburg%2C%20South%20Africa!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
+            width="100%"
+            height="300"
+            style="border: 0; border-radius: 8px"
+            allowfullscreen=""
+            loading="lazy"
+          >
+          </iframe>
+        </div>
+        <h6 class="fw-bold mb-3">Delivery Timeframes</h6>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Region</th>
+              <th>Delivery Time</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <i class="bi bi-geo-alt-fill text-primary me-2"></i>Gauteng
+              </td>
+              <td>2-3 business days</td>
+              <td class="text-success fw-bold">FREE over R500</td>
+            </tr>
+            <tr>
+              <td>
+                <i class="bi bi-geo-alt-fill text-primary me-2"></i>Western Cape
+              </td>
+              <td>3-4 business days</td>
+              <td class="text-success fw-bold">FREE over R500</td>
+            </tr>
+            <tr>
+              <td>
+                <i class="bi bi-geo-alt-fill text-primary me-2"></i>Other
+                Provinces
+              </td>
+              <td>4-5 business days</td>
+              <td class="text-success fw-bold">FREE over R500</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 24/7 Support Modal -->
+<div
+  class="modal fade"
+  id="supportModal"
+  tabindex="-1"
+  aria-labelledby="supportModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="supportModalLabel">
+          <i class="bi bi-headset me-2"></i>24/7 Customer Support
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <h6 class="fw-bold mb-3">Contact Us</h6>
+        <div class="list-group mb-3">
+          <a
+            href="tel:+27123456789"
+            class="list-group-item list-group-item-action"
+          >
+            <i class="bi bi-telephone-fill text-success me-3"></i>
+            <strong>Phone:</strong> +27 12 345 6789
+          </a>
+          <a
+            href="mailto:support@getalot.co.za"
+            class="list-group-item list-group-item-action"
+          >
+            <i class="bi bi-envelope-fill text-primary me-3"></i>
+            <strong>Email:</strong> support@getalot.co.za
+          </a>
+          <a
+            href="https://wa.me/27123456789"
+            target="_blank"
+            class="list-group-item list-group-item-action"
+          >
+            <i class="bi bi-whatsapp text-success me-3"></i>
+            <strong>WhatsApp:</strong> +27 12 345 6789
+          </a>
+          <div class="list-group-item">
+            <i class="bi bi-chat-dots-fill text-info me-3"></i>
+            <strong>Live Chat:</strong> Available 24/7
+            <button class="btn btn-sm btn-info float-end">Start Chat</button>
+          </div>
+        </div>
+        <h6 class="fw-bold mb-3">Operating Hours</h6>
+        <ul class="list-unstyled">
+          <li>
+            <i class="bi bi-clock-fill text-warning me-2"></i>Phone Support:
+            24/7
+          </li>
+          <li>
+            <i class="bi bi-clock-fill text-warning me-2"></i>Email Response:
+            Within 2 hours
+          </li>
+          <li>
+            <i class="bi bi-clock-fill text-warning me-2"></i>Live Chat: Instant
+          </li>
+        </ul>
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          Average response time: <strong>5 minutes</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Quantity controls
+  let quantity = 1;
+
+  $("#increaseQty").on("click", function () {
+    quantity++;
+    $("#quantity").val(quantity);
+  });
+
+  $("#decreaseQty").on("click", function () {
+    if (quantity > 1) {
+      quantity--;
+      $("#quantity").val(quantity);
+    }
+  });
+
+  // Add to cart with quantity
+  $(".atc").on("click", function () {
+    const itemId = this.id.toString();
+    const itemName = "{{ product_object.title }}";
+    const itemPrice = parseFloat(
+      "{{ product_object.discount_price|default:product_object.price }}",
+    );
+
+    if (window.cart[itemId] !== undefined) {
+      window.cart[itemId][0] += quantity;
+    } else {
+      window.cart[itemId] = [quantity, itemName, itemPrice];
+    }
+
+    console.log("Added to cart:", window.cart);
+    window.updateCartDisplay();
+
+    // Show success feedback
+    const button = $(this);
+    const originalText = button.html();
+    button.html('<i class="bi bi-check-circle me-2"></i>Added to Cart!');
+    button.addClass("btn-success").removeClass("btn-warning");
+
+    setTimeout(() => {
+      button.html(originalText);
+      button.addClass("btn-warning").removeClass("btn-success");
+    }, 2000);
+
+    // Reset quantity
+    quantity = 1;
+    $("#quantity").val(1);
+  });
+
+  // Wishlist functionality
+  $(".btn-wishlist").on("click", function () {
+    const itemId = $(this).data("id").toString();
+    const itemName = "{{ product_object.title }}";
+    const itemPrice = parseFloat(
+      "{{ product_object.discount_price|default:product_object.price }}",
+    );
+
+    if (window.wishlist[itemId] !== undefined) {
+      // Remove from wishlist
+      delete window.wishlist[itemId];
+      $(this).html('<i class="bi bi-heart me-2"></i>Add to Wishlist');
+      $(this).removeClass("btn-danger").addClass("btn-outline-danger");
+    } else {
+      // Add to wishlist
+      window.wishlist[itemId] = [itemName, itemPrice];
+      $(this).html('<i class="bi bi-heart-fill me-2"></i>Remove from Wishlist');
+      $(this).removeClass("btn-outline-danger").addClass("btn-danger");
+    }
+
+    window.updateWishlistDisplay();
+  });
+
+  // Check if item is already in wishlist on page load
+  $(document).ready(function () {
+    const itemId = "{{ product_object.id }}";
+    if (window.wishlist[itemId]) {
+      $("#wishlistBtn").html(
+        '<i class="bi bi-heart-fill me-2"></i>Remove from Wishlist',
+      );
+      $("#wishlistBtn")
+        .removeClass("btn-outline-danger")
+        .addClass("btn-danger");
+    }
+  });
+</script>
 {% endblock %}
